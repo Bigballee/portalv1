@@ -1,55 +1,57 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
-import axios from "axios"; // Import axios
+import { Link, useLocation } from "react-router-dom"; // Import useLocation for active link styling
+import axios from "axios";
 
 const PayslipPage = () => {
-  const [file, setFile] = useState(null); // State to hold the selected file
-  const [uploadStatus, setUploadStatus] = useState(""); // State to show upload status message
-  const [staffList, setStaffList] = useState([]); // State to hold list of staff
-  const [selectedStaff, setSelectedStaff] = useState(""); // State to hold the selected staff
-  const [uploadedFiles, setUploadedFiles] = useState([]); // State to hold the list of uploaded files
+  const [file, setFile] = useState(null); // Selected file for upload
+  const [uploadStatus, setUploadStatus] = useState(""); // Status of the file upload
+  const [staffList, setStaffList] = useState([]); // List of staff members
+  const [selectedStaff, setSelectedStaff] = useState(""); // Selected staff member for file upload
+  const [uploadedFiles, setUploadedFiles] = useState([]); // List of uploaded files for the selected staff
 
-  // Fetch staff members to populate the dropdown
+  const location = useLocation(); // Get current route
+
+  // Fetch list of staff members when component mounts
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff"); // Fetch the staff list from backend
-        setStaffList(response.data); // Assuming response is an array of staff members
+        const response = await axios.get("http://localhost:5001/staff");
+        setStaffList(response.data); // Set staff list from API response
       } catch (error) {
         console.error("Error fetching staff list:", error);
       }
     };
-
     fetchStaff();
   }, []);
 
-  // Fetch uploaded payslips from the backend
+  // Fetch uploaded files when a staff member is selected
   const fetchUploadedFiles = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/get-uploaded-payslips");
-      setUploadedFiles(response.data); // Assuming response is an array of file objects
+      if (selectedStaff) {
+        const response = await axios.get(`http://localhost:5001/get-uploaded-payslips/${selectedStaff}`);
+        setUploadedFiles(response.data); // Set uploaded files for the selected staff
+      }
     } catch (error) {
       console.error("Error fetching uploaded files:", error);
     }
   };
 
-  // Fetch uploaded files when the component mounts
   useEffect(() => {
-    fetchUploadedFiles();
-  }, []);
+    fetchUploadedFiles(); // Fetch uploaded files when staff member is selected
+  }, [selectedStaff]);
 
   // Handle file selection
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      setFile(selectedFile);
+      setFile(selectedFile); // Set selected file to state
     }
   };
 
-  // Handle staff selection
+  // Handle staff selection from dropdown
   const handleStaffChange = (e) => {
-    setSelectedStaff(e.target.value);
+    setSelectedStaff(e.target.value); // Set selected staff member
   };
 
   // Handle file upload
@@ -65,23 +67,20 @@ const PayslipPage = () => {
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", file); // Append file to form data
     formData.append("staffId", selectedStaff); // Append selected staff ID
 
     try {
       setUploadStatus("Uploading...");
 
-      // Send the file and the staff ID to the backend
+      // Send the file to the backend
       const response = await axios.post("http://localhost:5001/upload-payslip", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.status === 200) {
         setUploadStatus("File uploaded successfully!");
-        // Fetch updated list of uploaded files
-        fetchUploadedFiles(); // Now defined properly
+        fetchUploadedFiles(); // Refresh uploaded files list
       } else {
         setUploadStatus("Error uploading file. Please try again.");
       }
@@ -93,8 +92,11 @@ const PayslipPage = () => {
 
   // Handle file download
   const handleFileDownload = (fileUrl) => {
-    window.open(fileUrl, "_blank");
+    window.open(fileUrl, "_blank"); // Open file in new tab
   };
+
+  // Function to check if a link is active
+  const isActive = (path) => (location.pathname === path ? "bg-success text-white" : "text-white");
 
   return (
     <div>
@@ -119,52 +121,59 @@ const PayslipPage = () => {
           <h4>Admin Dashboard</h4>
           <ul className="nav flex-column">
             <li className="nav-item">
-              <Link to="/admin" className="nav-link text-white">
+              <Link to="/admin" className={`nav-link ${isActive("/admin")}`}>
                 <i className="bi bi-house-door"></i> Admin Page
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/manage-users" className="nav-link text-white">
-                <i className="bi bi-person-lines-fill"></i> Manage Users
+              <Link
+                to="/manage-users"
+                className={`nav-link ${isActive("/manage-users")}`}
+              >
+                <i className="bi bi-person-lines-fill"></i> Manage Carers
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/view-reports" className="nav-link text-white">
+              <Link
+                to="/view-reports"
+                className={`nav-link ${isActive("/view-reports")}`}
+              >
                 <i className="bi bi-file-earmark-bar-graph"></i> View Reports
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/dbs" className="nav-link text-white">
+              <Link to="/dbs" className={`nav-link ${isActive("/dbs")}`}>
                 <i className="bi bi-file-earmark-lock"></i> DBS
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/payslip" className="nav-link text-white">
+              <Link to="/payslip" className={`nav-link ${isActive("/payslip")}`}>
                 <i className="bi bi-cash"></i> Payslip
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/cv" className="nav-link text-white">
+              <Link to="/cv" className={`nav-link ${isActive("/cv")}`}>
                 <i className="bi bi-file-person"></i> CV
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/employment-contract" className="nav-link text-white">
+              <Link
+                to="/employment-contract"
+                className={`nav-link ${isActive("/employment-contract")}`}
+              >
                 <i className="bi bi-file-earmark-text"></i> Employment Contract
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/rota" className="nav-link text-white">
+              <Link to="/rota" className={`nav-link ${isActive("/rota")}`}>
                 <i className="bi bi-calendar-check"></i> Rota
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/annual-leave" className="nav-link text-white">
-                <i className="bi bi-calendar-heart"></i> Annual Leave
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/client-ppe-order" className="nav-link text-white">
+              <Link
+                to="/client-ppe-order"
+                className={`nav-link ${isActive("/client-ppe-order")}`}
+              >
                 <i className="bi bi-box-seam"></i> Client PPE Order
               </Link>
             </li>
@@ -207,6 +216,7 @@ const PayslipPage = () => {
             </div>
           </div>
 
+          {/* Upload Button */}
           <div className="text-center mb-3">
             <button
               className="btn btn-primary"

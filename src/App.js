@@ -12,7 +12,6 @@ import Payslip from "./Pages/Payslip";
 import Cvs from "./Pages/Cvs";
 import Employment from "./Pages/Employment";
 import Rota from "./Pages/Rota";
-import Annual from "./Pages/Annual";
 import ClientOrder from "./Pages/ClientOrder";
 import Carer from "./Pages/Carer"
 import Client from "./Pages/Client"
@@ -36,7 +35,6 @@ function App() {
           <Route path="/cv" element={<Cvs />} />
           <Route path="/employment-contract" element={<Employment />} />
           <Route path="/rota" element={<Rota />} />
-          <Route path="/annual-leave" element={<Annual />} />
           <Route path="/client-ppe-order" element={<ClientOrder />} />
         </Routes>
       </div>

@@ -1,34 +1,32 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
-import axios from "axios"; // Import axios
+import { Link, useLocation } from "react-router-dom"; // Import useLocation for active link styling
+import axios from "axios";
 
 const DbsPage = () => {
-  const [file, setFile] = useState(null); // State to hold the selected file
-  const [uploadStatus, setUploadStatus] = useState(""); // State to show upload status message
-  const [staffList, setStaffList] = useState([]); // State to hold list of staff
-  const [selectedStaff, setSelectedStaff] = useState(""); // State to hold the selected staff
+  const [staffList, setStaffList] = useState([]); // State for the list of staff
+  const [file, setFile] = useState(null); // State for the selected file
+  const [uploadStatus, setUploadStatus] = useState(""); // State for upload status
+  const [selectedStaff, setSelectedStaff] = useState(""); // State for selected staff
+  const location = useLocation(); // Get current route
 
   // Fetch staff members to populate the dropdown
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff"); // Fetch the staff list from backend
-        setStaffList(response.data); // Assuming response is an array of staff members
+        const response = await axios.get("http://localhost:5001/staff");
+        setStaffList(response.data); // Assuming response contains staff data
       } catch (error) {
-        console.error("Error fetching staff list:", error);
+        console.error("Error fetching staff data:", error);
       }
     };
-    
+
     fetchStaff();
   }, []);
 
   // Handle file selection
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-    }
+    setFile(e.target.files[0]);
   };
 
   // Handle staff selection
@@ -38,40 +36,34 @@ const DbsPage = () => {
 
   // Handle file upload
   const handleFileUpload = async () => {
-    if (!file) {
-      setUploadStatus("Please select a file to upload.");
-      return;
-    }
-
-    if (!selectedStaff) {
-      setUploadStatus("Please select a staff member to upload the file to.");
+    if (!file || !selectedStaff) {
+      setUploadStatus("Please select both a staff member and a file.");
       return;
     }
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("staffId", selectedStaff); // Append selected staff ID
+    formData.append("staffId", selectedStaff);
 
     try {
       setUploadStatus("Uploading...");
-
-      // Send the file and the staff ID to the backend
       const response = await axios.post("http://localhost:5001/upload-dbs", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
       if (response.status === 200) {
         setUploadStatus("File uploaded successfully!");
       } else {
-        setUploadStatus("Error uploading file. Please try again.");
+        setUploadStatus("Error uploading file.");
       }
     } catch (error) {
-      console.error("Error uploading file:", error);
-      setUploadStatus("Error uploading file. Please try again.");
+      setUploadStatus("Error uploading file.");
     }
   };
+
+  // Function to check if a link is active
+  const isActive = (path) => (location.pathname === path ? "bg-success" : "");
 
   return (
     <div>
@@ -84,7 +76,6 @@ const DbsPage = () => {
               alt="GoldenCore Logo"
               className="custom-logo"
               style={{ width: "150px", height: "auto" }}
-
             />
             GoldenCore
           </a>
@@ -97,52 +88,47 @@ const DbsPage = () => {
           <h4>Admin Dashboard</h4>
           <ul className="nav flex-column">
             <li className="nav-item">
-              <Link to="/admin" className="nav-link text-white">
+              <Link to="/admin" className={`nav-link text-white ${isActive("/admin")}`}>
                 <i className="bi bi-house-door"></i> Admin Page
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/manage-users" className="nav-link text-white">
-                <i className="bi bi-person-lines-fill"></i> Manage Users
+              <Link to="/manage-users" className={`nav-link text-white ${isActive("/manage-users")}`}>
+                <i className="bi bi-person-lines-fill"></i> Manage Carers
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/view-reports" className="nav-link text-white">
+              <Link to="/view-reports" className={`nav-link text-white ${isActive("/view-reports")}`}>
                 <i className="bi bi-file-earmark-bar-graph"></i> View Reports
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/dbs" className="nav-link text-white">
+              <Link to="/dbs" className={`nav-link text-white ${isActive("/dbs")}`}>
                 <i className="bi bi-file-earmark-lock"></i> DBS
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/payslip" className="nav-link text-white">
+              <Link to="/payslip" className={`nav-link text-white ${isActive("/payslip")}`}>
                 <i className="bi bi-cash"></i> Payslip
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/cv" className="nav-link text-white">
+              <Link to="/cv" className={`nav-link text-white ${isActive("/cv")}`}>
                 <i className="bi bi-file-person"></i> CV
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/employment-contract" className="nav-link text-white">
+              <Link to="/employment-contract" className={`nav-link text-white ${isActive("/employment-contract")}`}>
                 <i className="bi bi-file-earmark-text"></i> Employment Contract
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/rota" className="nav-link text-white">
+              <Link to="/rota" className={`nav-link text-white ${isActive("/rota")}`}>
                 <i className="bi bi-calendar-check"></i> Rota
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/annual-leave" className="nav-link text-white">
-                <i className="bi bi-calendar-heart"></i> Annual Leave
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/client-ppe-order" className="nav-link text-white">
+              <Link to="/client-ppe-order" className={`nav-link text-white ${isActive("/client-ppe-order")}`}>
                 <i className="bi bi-box-seam"></i> Client PPE Order
               </Link>
             </li>

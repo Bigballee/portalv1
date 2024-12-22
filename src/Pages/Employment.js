@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // Import useLocation for active link styling
 import axios from "axios"; // Import axios
 
 const EmploymentContractPage = () => {
@@ -9,6 +9,7 @@ const EmploymentContractPage = () => {
   const [file, setFile] = useState(null); // State to hold the selected file for upload
   const [selectedUser, setSelectedUser] = useState(""); // State to hold the selected user
   const [users, setUsers] = useState([]); // State to hold the list of users
+  const location = useLocation(); // Get current route
 
   // Fetch the list of users from the backend
   const fetchUsers = async () => {
@@ -78,6 +79,9 @@ const EmploymentContractPage = () => {
     window.location.href = `http://localhost:5001/download-employment-contract/${filePath}`;
   };
 
+  // Function to check if a link is active
+  const isActive = (path) => (location.pathname === path ? "bg-success" : "");
+
   return (
     <div>
       {/* Navbar */}
@@ -101,52 +105,47 @@ const EmploymentContractPage = () => {
           <h4>Admin Dashboard</h4>
           <ul className="nav flex-column">
             <li className="nav-item">
-              <Link to="/admin" className="nav-link text-white">
+              <Link to="/admin" className={`nav-link text-white ${isActive("/admin")}`}>
                 <i className="bi bi-house-door"></i> Admin Page
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/manage-users" className="nav-link text-white">
-                <i className="bi bi-person-lines-fill"></i> Manage Users
+              <Link to="/manage-users" className={`nav-link text-white ${isActive("/manage-users")}`}>
+                <i className="bi bi-person-lines-fill"></i> Manage Carers
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/view-reports" className="nav-link text-white">
+              <Link to="/view-reports" className={`nav-link text-white ${isActive("/view-reports")}`}>
                 <i className="bi bi-file-earmark-bar-graph"></i> View Reports
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/dbs" className="nav-link text-white">
+              <Link to="/dbs" className={`nav-link text-white ${isActive("/dbs")}`}>
                 <i className="bi bi-file-earmark-lock"></i> DBS
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/payslip" className="nav-link text-white">
+              <Link to="/payslip" className={`nav-link text-white ${isActive("/payslip")}`}>
                 <i className="bi bi-cash"></i> Payslip
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/cv" className="nav-link text-white">
+              <Link to="/cv" className={`nav-link text-white ${isActive("/cv")}`}>
                 <i className="bi bi-file-person"></i> CV
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/employment-contract" className="nav-link text-white">
+              <Link to="/employment-contract" className={`nav-link text-white ${isActive("/employment-contract")}`}>
                 <i className="bi bi-file-earmark-text"></i> Employment Contract
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/rota" className="nav-link text-white">
+              <Link to="/rota" className={`nav-link text-white ${isActive("/rota")}`}>
                 <i className="bi bi-calendar-check"></i> Rota
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/annual-leave" className="nav-link text-white">
-                <i className="bi bi-calendar-heart"></i> Annual Leave
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/client-ppe-order" className="nav-link text-white">
+              <Link to="/client-ppe-order" className={`nav-link text-white ${isActive("/client-ppe-order")}`}>
                 <i className="bi bi-box-seam"></i> Client PPE Order
               </Link>
             </li>
