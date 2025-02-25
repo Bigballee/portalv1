@@ -5,16 +5,7 @@ import axios from "axios"; // For making API requests
 
 const ViewReportsPage = () => {
   const [reports, setReports] = useState([]);
-  const [selectedReport, setSelectedReport] = useState(null);
-  const [responseMessage, setResponseMessage] = useState("");
-  const [file, setFile] = useState(null);
-  const [selectedUser, setSelectedUser] = useState("");
-  const [fileToSend, setFileToSend] = useState(null);
   const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [searchQuery, setSearchQuery] = useState(""); // For user search
   const location = useLocation(); // Get current route
 
   // Function to check if a link is active
@@ -26,10 +17,8 @@ const ViewReportsPage = () => {
       try {
         const response = await axios.get("http://localhost:5001/reports"); // Adjust endpoint as needed
         setReports(response.data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching reports:", error);
-        setLoading(false);
       }
     };
     fetchReports();
@@ -41,68 +30,12 @@ const ViewReportsPage = () => {
       try {
         const response = await axios.get("http://localhost:5001/users"); // Ensure this endpoint is correct
         setUsers(response.data);
-        setFilteredUsers(response.data); // Initialize filtered users with all users
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
     fetchUsers();
   }, []);
-
-  // Filter users based on the search query
-  useEffect(() => {
-    const filtered = users.filter((user) =>
-      `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredUsers(filtered);
-  }, [searchQuery, users]); // Re-run when search query or users list changes
-
-  // Respond to the report
-  const handleRespondToReport = async (reportId) => {
-    const formData = new FormData();
-    formData.append("message", responseMessage);
-    if (file) {
-      formData.append("file", file);
-    }
-
-    try {
-      await axios.post(
-        `http://localhost:5001/reports/${reportId}/respond`, // Adjust endpoint as needed
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      setReports((prevReports) =>
-        prevReports.map((report) =>
-          report.id === reportId ? { ...report, status: "resolved" } : report
-        )
-      );
-      setSelectedReport(null);
-      setResponseMessage("");
-      setFile(null);
-    } catch (error) {
-      console.error("Error responding to report:", error);
-    }
-  };
-
-  // Send file to a selected user
-  const handleSendFileToUser = async () => {
-    const formData = new FormData();
-    formData.append("file", fileToSend);
-    formData.append("user_id", selectedUser);
-
-    try {
-      await axios.post(
-        "http://localhost:5001/send-file", // Ensure this endpoint is correct
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      setFileToSend(null);
-      setSelectedUser("");
-    } catch (error) {
-      setErrorMessage("Failed to send file. Please try again.");
-      console.error("Error sending file to user:", error);
-    }
-  };
 
   return (
     <div>

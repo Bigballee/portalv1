@@ -14,7 +14,7 @@ const RotaPage = () => {
   // Fetch the list of users from the backend
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/users"); // Fetch users from the backend
+      const response = await axios.get("http://localhost:5001/staff"); // Fetch users from the backend
       setUsers(response.data); // Assuming response is an array of users
     } catch (error) {
       console.error("Error fetching users:", error);

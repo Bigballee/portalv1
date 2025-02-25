@@ -132,6 +132,14 @@ const DbsPage = () => {
                 <i className="bi bi-box-seam"></i> Client PPE Order
               </Link>
             </li>
+            <li className="nav-item">
+              <Link
+                to="/file-management"
+                className={`nav-link ${isActive("/file-management")}`}
+              >
+                <i className="bi bi-folder"></i> File Management
+              </Link>
+            </li>
           </ul>
         </div>
 

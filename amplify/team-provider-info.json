@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-goldencareportal-dev-7aa62-authRole",
+      "UnauthRoleArn": "arn:aws:iam::205930645423:role/amplify-goldencareportal-dev-7aa62-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::205930645423:role/amplify-goldencareportal-dev-7aa62-authRole",
+      "Region": "eu-north-1",
+      "DeploymentBucketName": "amplify-goldencareportal-dev-7aa62-deployment",
+      "UnauthRoleName": "amplify-goldencareportal-dev-7aa62-unauthRole",
+      "StackName": "amplify-goldencareportal-dev-7aa62",
+      "StackId": "arn:aws:cloudformation:eu-north-1:205930645423:stack/amplify-goldencareportal-dev-7aa62/82b2f7e0-e3fe-11ef-a378-0a21b0ef380d",
+      "AmplifyAppId": "d20s0wqoxr8h9w"
+    },
+    "categories": {
+      "hosting": {
+        "S3AndCloudFront": {}
+      }
+    }
+  }
+}
