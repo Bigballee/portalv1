@@ -15,7 +15,7 @@ const ViewReportsPage = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/reports"); // Adjust endpoint as needed
+        const response = await axios.get("https://mygolden.co.uk/reports"); // Adjust endpoint as needed
         setReports(response.data);
       } catch (error) {
         console.error("Error fetching reports:", error);
@@ -28,7 +28,7 @@ const ViewReportsPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/users"); // Ensure this endpoint is correct
+        const response = await axios.get("https://mygolden.co.uk/users"); // Ensure this endpoint is correct
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);

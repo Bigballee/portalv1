@@ -12,7 +12,7 @@ const StaffRotaPage = () => {
   useEffect(() => {
     const fetchStaffRotaFiles = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff-rota", {
+        const response = await axios.get("https://mygolden.co.uk/staff-rota", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Include authorization token if needed
           },
@@ -31,7 +31,7 @@ const StaffRotaPage = () => {
   // Handle rota file download
   const handleDownloadRota = (filePath) => {
     // Trigger file download
-    window.location.href = `http://localhost:5001/download-rota/${filePath}`;
+    window.location.href = `https://mygolden.co.uk/download-rota/${filePath}`;
   };
 
   // Function to check if a link is active

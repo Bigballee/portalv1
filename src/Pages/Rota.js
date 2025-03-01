@@ -14,7 +14,7 @@ const RotaPage = () => {
   // Fetch the list of users from the backend
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/staff"); // Fetch users from the backend
+      const response = await axios.get("https://mygolden.co.uk/staff"); // Fetch users from the backend
       setUsers(response.data); // Assuming response is an array of users
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -25,7 +25,7 @@ const RotaPage = () => {
   useEffect(() => {
     const fetchRotaFiles = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/rota"); // Endpoint to fetch rota files
+        const response = await axios.get("https://mygolden.co.uk/rota"); // Endpoint to fetch rota files
         setRotaList(response.data); // Assuming response is an array of rota files
         setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
@@ -60,7 +60,7 @@ const RotaPage = () => {
     formData.append("userId", selectedUser); // Add the selected user to the form data
 
     try {
-      const response = await axios.post("http://localhost:5001/upload-rota", formData, {
+      const response = await axios.post("https://mygolden.co.uk/upload-rota", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -75,7 +75,7 @@ const RotaPage = () => {
   // Handle rota file download
   const handleDownloadRota = (filePath) => {
     // Trigger file download
-    window.location.href = `http://localhost:5001/download-rota/${filePath}`;
+    window.location.href = `https://mygolden.co.uk/download-rota/${filePath}`;
   };
 
   // Function to check if a link is active

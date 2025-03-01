@@ -13,7 +13,7 @@ const StaffEmploymentContractPage = () => {
   useEffect(() => {
     const fetchStaffContractFiles = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff-employment-contract", {
+        const response = await axios.get("https://mygolden.co.uk/staff-employment-contract", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Include authorization token if needed
           },
@@ -38,7 +38,7 @@ const StaffEmploymentContractPage = () => {
     const formattedName = fullName.replace(" ", "_"); // Replace space with underscore
     const filePath = `goldencare-doc/employments-contracts/${formattedName}/${fileName}`;
     // Trigger file download by opening the file in a new tab
-    window.open(`http://localhost:5001/download-contract/${filePath}`, '_blank');
+    window.open(`https://mygolden.co.uk/download-contract/${filePath}`, '_blank');
   };
 
   // Function to check if a link is active

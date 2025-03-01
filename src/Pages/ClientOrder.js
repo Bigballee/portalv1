@@ -19,7 +19,7 @@ const ClientOrderPage = () => {
   useEffect(() => {
     const fetchClientOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/client-ppe-orders"); // Endpoint to fetch client PPE orders
+        const response = await axios.get("https://mygolden.co.uk/client-ppe-orders"); // Endpoint to fetch client PPE orders
         setOrderList(response.data); // Assuming response is an array of orders
         setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
@@ -56,7 +56,7 @@ const ClientOrderPage = () => {
     formData.append("clientPPEOrder", file);
 
     try {
-      const response = await axios.post("http://localhost:5001/upload-client-ppe-order", formData, {
+      const response = await axios.post("https://mygolden.co.uk/upload-client-ppe-order", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -73,7 +73,7 @@ const ClientOrderPage = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5001/submit-client-ppe-order", orderDetails);
+      const response = await axios.post("https://mygolden.co.uk/submit-client-ppe-order", orderDetails);
       // On successful form submission, add the new order to the list
       setOrderList([...orderList, response.data]);
       setOrderDetails({

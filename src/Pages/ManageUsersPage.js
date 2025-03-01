@@ -13,7 +13,7 @@ const ManageUserPage = () => {
   useEffect(() => {
     const fetchPendingRegistrations = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/pending-registrations");
+        const response = await axios.get("https://mygolden.co.uk/pending-registrations");
         setPendingRegistrations(Array.isArray(response.data) ? response.data : []); // Validate response data
       } catch (error) {
         console.error("Error fetching pending registrations:", error);
@@ -31,7 +31,7 @@ const ManageUserPage = () => {
       }
 
       try {
-        const response = await axios.get("http://localhost:5001/staff", {
+        const response = await axios.get("https://mygolden.co.uk/staff", {
           params: { search: searchQuery },
         });
         setStaffList(response.data);
@@ -46,7 +46,7 @@ const ManageUserPage = () => {
   // Approve a registration
   const handleApproveRegistration = async (id, role) => {
     try {
-      await axios.post(`http://localhost:5001/approve-registration/${id}`);
+      await axios.post(`https://mygolden.co.uk/approve-registration/${id}`);
       const approvedRegistration = pendingRegistrations.find(
         (registration) => registration.user_id === id
       );
@@ -65,7 +65,7 @@ const ManageUserPage = () => {
   // Decline a registration
   const handleDeclineRegistration = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/decline-registration/${id}`);
+      await axios.delete(`https://mygolden.co.uk/decline-registration/${id}`);
       setPendingRegistrations(
         pendingRegistrations.filter((registration) => registration.user_id !== id)
       );

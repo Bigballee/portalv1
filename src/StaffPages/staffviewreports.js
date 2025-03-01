@@ -12,7 +12,7 @@ const StaffViewReportPage = () => {
   useEffect(() => {
     const fetchStaffReportFiles = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff-view-reports", {
+        const response = await axios.get("https://mygolden.co.uk/staff-view-reports", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Include authorization token if needed
           },
@@ -31,7 +31,7 @@ const StaffViewReportPage = () => {
   // Handle report file download
   const handleDownloadReport = (filePath) => {
     // Trigger file download
-    window.location.href = `http://localhost:5001/download-report/${filePath}`;
+    window.location.href = `https://mygolden.co.uk/download-report/${filePath}`;
   };
 
   // Function to check if a link is active

@@ -12,7 +12,7 @@ const CvPage = () => {
   useEffect(() => {
     const fetchCvs = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff"); // Fetch CV list from backend
+        const response = await axios.get("https://mygolden.co.uk/staff"); // Fetch CV list from backend
         setCvList(response.data); // Assuming response is an array of CVs
         setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
@@ -27,7 +27,7 @@ const CvPage = () => {
   // Handle CV download
   const handleDownloadCv = (cvPath) => {
     // Trigger file download
-    window.location.href = `http://localhost:5001/download-cv/${cvPath}`;
+    window.location.href = `https://mygolden.co.uk/download-cv/${cvPath}`;
   };
 
   // Function to check if a link is active

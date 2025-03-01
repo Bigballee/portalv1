@@ -14,7 +14,7 @@ const DbsPage = () => {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff");
+        const response = await axios.get("https://mygolden.co.uk/staff");
         setStaffList(response.data); // Assuming response contains staff data
       } catch (error) {
         console.error("Error fetching staff data:", error);
@@ -47,7 +47,7 @@ const DbsPage = () => {
 
     try {
       setUploadStatus("Uploading...");
-      const response = await axios.post("http://localhost:5001/upload-dbs", formData, {
+      const response = await axios.post("https://mygolden.co.uk/upload-dbs", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

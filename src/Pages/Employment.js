@@ -16,7 +16,7 @@ const EmploymentContractPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/staff");
+      const response = await axios.get("https://mygolden.co.uk/staff");
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -25,7 +25,7 @@ const EmploymentContractPage = () => {
 
   const fetchContracts = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/employment-contracts");
+      const response = await axios.get("https://mygolden.co.uk/employment-contracts");
       setContractList(response.data);
       setLoading(false);
     } catch (error) {
@@ -54,7 +54,7 @@ const EmploymentContractPage = () => {
     formData.append("user_id", selectedUser);
 
     try {
-      const response = await axios.post("http://localhost:5001/upload-file", formData, {
+      const response = await axios.post("https://mygolden.co.uk/upload-file", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -68,7 +68,7 @@ const EmploymentContractPage = () => {
 
   const handleDownloadContract = async (fileName, userId) => {
     try {
-      const response = await axios.get(`http://localhost:5001/get-file`, {
+      const response = await axios.get(`https://mygolden.co.uk/get-file`, {
         params: { file_name: fileName, user_id: userId },
       });
 

@@ -12,7 +12,7 @@ const StaffPayslipPage = () => {
   useEffect(() => {
     const fetchStaffPayslipFiles = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff-payslip", {
+        const response = await axios.get("https://mygolden.co.uk/staff-payslip", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Include authorization token if needed
           },
@@ -31,7 +31,7 @@ const StaffPayslipPage = () => {
   // Handle payslip file download
   const handleDownloadPayslip = (filePath) => {
     // Trigger file download
-    window.location.href = `http://localhost:5001/download-payslip/${filePath}`;
+    window.location.href = `https://mygolden.co.uk/download-payslip/${filePath}`;
   };
 
   // Function to check if a link is active

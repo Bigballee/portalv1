@@ -12,7 +12,7 @@ const StaffDbsPage = () => {
   useEffect(() => {
     const fetchStaffDbsFiles = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff", {
+        const response = await axios.get("https://mygolden.co.uk/staff", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Include authorization token if needed
           },
@@ -31,7 +31,7 @@ const StaffDbsPage = () => {
   // Handle DBS file download
   const handleDownloadDbs = (filePath) => {
     // Trigger file download
-    window.location.href = `http://localhost:5001/download-dbs/${filePath}`;
+    window.location.href = `https://mygolden.co.uk/download-dbs/${filePath}`;
   };
 
   // Function to check if a link is active

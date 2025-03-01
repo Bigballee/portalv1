@@ -16,7 +16,7 @@ const PayslipPage = () => {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/staff");
+        const response = await axios.get("https://mygolden.co.uk/staff");
         setStaffList(response.data); // Set staff list from API response
       } catch (error) {
         console.error("Error fetching staff list:", error);
@@ -29,7 +29,7 @@ const PayslipPage = () => {
   const fetchUploadedFiles = async () => {
     try {
       if (selectedStaff) {
-        const response = await axios.get(`http://localhost:5001/get-uploaded-payslips/${selectedStaff}`);
+        const response = await axios.get(`https://mygolden.co.uk/get-uploaded-payslips/${selectedStaff}`);
         setUploadedFiles(response.data); // Set uploaded files for the selected staff
       }
     } catch (error) {
@@ -74,7 +74,7 @@ const PayslipPage = () => {
       setUploadStatus("Uploading...");
 
       // Send the file to the backend
-      const response = await axios.post("http://localhost:5001/upload-payslip", formData, {
+      const response = await axios.post("https://mygolden.co.uk/upload-payslip", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
