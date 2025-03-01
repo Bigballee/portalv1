@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Styles/LoginPage.css";
-import {jwtDecode} from "jwt-decode"; // Corrected import
-
-
-
+import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -15,12 +12,30 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Check if the user is already logged in
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const userRole = decodedToken.role;
+        // Redirect based on user role
+        if (userRole === "admin") {
+          navigate("/admin");
+        } else if (userRole === "staff") {
+          navigate("/staff");
+        }
+      } catch (err) {
+        console.error("Error decoding token:", err);
+        localStorage.removeItem("authToken");
+      }
+    }
+  }, [navigate]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(null);
 
-    setError(null); // Reset error before making a new request
-
-    // Basic validation
     if (!email || !password) {
       setError("Email and password are required.");
       return;
@@ -29,26 +44,21 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      // Make API call to login
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL || "http://localhost:5001"}/login`,
-        { email, password }
-      );
+      // Updated API endpoint directly to the new live server URL
+      console.log("Using new API endpoint for login");
 
-      // If login is successful, the backend should return a token
+      const response = await axios.post("http://51.20.26.200/login", { email, password });
+
       if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token); // Store JWT in localStorage
+        localStorage.setItem("authToken", response.data.token);
+        const decodedToken = jwtDecode(response.data.token);
+        const userRole = decodedToken.role;
+        console.log("Decoded Token:", decodedToken);
 
-        const decodedToken = jwtDecode(response.data.token); // Decode the token to check user role
-        const userRole = decodedToken.role; // Extract user role from the decoded token
-
-        console.log("Decoded Token:", decodedToken); // Debug: Check the decoded token
-
-        // Redirect based on user role
         if (userRole === "admin") {
-          navigate("/admin"); // Redirect to admin page
+          navigate("/admin");
         } else if (userRole === "staff") {
-          navigate("/staff"); // Redirect to staff page
+          navigate("/staff");
         } else {
           setError("Unknown user role.");
         }
@@ -56,7 +66,6 @@ const LoginPage = () => {
         setError("No token received from server.");
       }
     } catch (error) {
-      // Handle errors
       if (error.response && error.response.status === 401) {
         setError("Invalid email or password.");
       } else {
@@ -65,6 +74,7 @@ const LoginPage = () => {
       console.error("Login error:", error);
     } finally {
       setIsLoading(false);
+      
     }
   };
 
@@ -90,7 +100,7 @@ const LoginPage = () => {
         <div className="card shadow-lg p-4">
           <h2 className="text-center mb-4">Sign In to Your Account</h2>
 
-          {error && <div className="alert alert-danger">{error}</div>} {/* Error Message */}
+          {error && <div className="alert alert-danger">{error}</div>}
 
           <form onSubmit={handleLogin}>
             <div className="mb-3">
@@ -128,8 +138,7 @@ const LoginPage = () => {
             </div>
             <div className="text-center mt-3">
               <p>
-                Don't have an account?{" "}
-                <Link to="/create-account">Register here</Link>
+                Don't have an account? <Link to="/create-account">Register here</Link>
               </p>
               <p>
                 <Link to="/forgot-password">Forgot Password?</Link>

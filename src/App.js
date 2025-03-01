@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; 
-import { Provider } from "react-redux"; // Import Provider
+import { Provider, useSelector } from "react-redux";
 import store from "../src/Pages/foldercomp/store"; // Import your store
 
 // Import components
@@ -28,16 +28,33 @@ import StaffEmploymentContractPage from "./StaffPages/staffemploymentcontract";
 import StaffDbsPage from "./StaffPages/staffdbs";
 import StaffViewReportPage from "./StaffPages/staffviewreports";
 
+/**
+ * ProtectedRoute component checks authentication and authorization.
+ * If not authenticated, it redirects to the login page.
+ * If the user's role is not allowed, it displays an error message.
+ */
+const ProtectedRoute = ({ element, allowedRoles }) => {
+  // Use a fallback object if state.auth is undefined
+  const auth = useSelector((state) => state.auth) || { isAuthenticated: false, userRole: "" };
+  const { isAuthenticated, userRole } = auth;
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  
+  if (!allowedRoles.includes(userRole)) {
+    return (
+      <div style={{ padding: "2rem", textAlign: "center" }}>
+        <h2>Access Denied</h2>
+        <p>You do not have permission to access this page.</p>
+      </div>
+    );
+  }
+  
+  return element;
+};
+
 function App() {
-  const isAuthenticated = true; // Replace with authentication logic
-  const userRole = "admin"; // Replace with role-based logic
-
-  const ProtectedRoute = ({ element, allowedRoles }) => {
-    if (!isAuthenticated) return <Navigate to="/" />;
-    if (!allowedRoles.includes(userRole)) return <Navigate to="/" />;
-    return element;
-  };
-
   return (
     <Provider store={store}> {/* Wrap everything in Provider */}
       <Router>
@@ -85,7 +102,6 @@ function App() {
               path="/client-ppe-order" 
               element={<ProtectedRoute element={<ClientOrder />} allowedRoles={['admin']} />} 
             />
-
             <Route 
               path="/file-management"
               element={<ProtectedRoute element={<Filemanager />} allowedRoles={['admin']} />}

@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useLocation } from "react-router-dom";
 import { Button, Modal, Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { addFolder, setCurrentFolder, addFileToFolder, addSubFolder, deleteFile, deleteFolder } from '../Pages/foldercomp/folderSlice'; // Adjust the import path
+import {
+  addFolder,
+  setCurrentFolder,
+  addFileToFolder,
+  addSubFolder,
+  deleteFile,
+  deleteFolder,
+} from "../Pages/foldercomp/folderSlice"; // Adjust the import path
 
 const FileManagementPage = () => {
   const [showFolderModal, setShowFolderModal] = useState(false);
@@ -11,7 +18,6 @@ const FileManagementPage = () => {
   const [newFolderName, setNewFolderName] = useState("");
   const [newFileName, setNewFileName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedFolderId, setSelectedFolderId] = useState(null);
 
   const location = useLocation();
   const dispatch = useDispatch();
@@ -33,11 +39,11 @@ const FileManagementPage = () => {
       subFolders: [],
     };
 
-    // If we are in a current folder, create a subfolder; otherwise, create a top-level folder
+    // If a folder is currently selected, add as a subfolder; otherwise, add as a top-level folder
     if (currentFolder) {
       dispatch(addSubFolder({ parentFolderId: currentFolder.id, subFolder: newFolder }));
     } else {
-      dispatch(addFolder(newFolder));  // Add folder to the top-level
+      dispatch(addFolder(newFolder));
     }
 
     setNewFolderName("");
@@ -51,10 +57,16 @@ const FileManagementPage = () => {
       return;
     }
 
+    // Check if a folder is selected before uploading the file
+    if (!currentFolder) {
+      alert("Please select a folder before uploading a file.");
+      return;
+    }
+
     const newFile = {
       id: currentFiles.length + 1,
       name: newFileName,
-      file: selectedFile,
+      file: selectedFile, // This is the File object from the file input
     };
 
     dispatch(addFileToFolder({ folderId: currentFolder.id, file: newFile }));
@@ -63,12 +75,28 @@ const FileManagementPage = () => {
     setShowFileModal(false);
   };
 
+  // Download handler: creates an object URL and triggers a download
+  const handleDownloadFile = (file) => {
+    if (!file || !file.file) {
+      alert("File not available for download.");
+      return;
+    }
+    const url = URL.createObjectURL(file.file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const handleFolderClick = (folder) => {
-    dispatch(setCurrentFolder(folder));  // Set the clicked folder as the current folder
+    dispatch(setCurrentFolder(folder));
   };
 
   const handleBackClick = () => {
-    dispatch(setCurrentFolder(null));  // Go back to the root folder
+    dispatch(setCurrentFolder(null));
   };
 
   // Delete file action
@@ -80,7 +108,7 @@ const FileManagementPage = () => {
   const handleDeleteFolder = (folderId) => {
     dispatch(deleteFolder({ folderId }));
     if (currentFolder && currentFolder.id === folderId) {
-      dispatch(setCurrentFolder(null));  // Go back to root folder if we delete the current folder
+      dispatch(setCurrentFolder(null));
     }
   };
 
@@ -129,17 +157,10 @@ const FileManagementPage = () => {
           <p className="text-center">Manage your files and folders.</p>
 
           <div className="mb-4">
-            <Button
-              variant="outline-dark"
-              onClick={() => setShowFolderModal(true)}
-              className="mr-3"
-            >
+            <Button variant="outline-dark" onClick={() => setShowFolderModal(true)} className="mr-3">
               Create Folder
             </Button>
-            <Button
-              variant="outline-dark"
-              onClick={() => setShowFileModal(true)}
-            >
+            <Button variant="outline-dark" onClick={() => setShowFileModal(true)}>
               Upload File
             </Button>
           </div>
@@ -148,7 +169,9 @@ const FileManagementPage = () => {
           <div className="d-flex mb-3">
             {currentFolder ? (
               <>
-                <Button variant="link" onClick={handleBackClick}>Back</Button>
+                <Button variant="link" onClick={handleBackClick}>
+                  Back
+                </Button>
                 <span className="ml-2">{currentFolder.name}</span>
               </>
             ) : (
@@ -163,7 +186,9 @@ const FileManagementPage = () => {
                 <div className="card">
                   <div className="card-body">
                     <h5 className="card-title">{folder.name}</h5>
-                    <button className="btn btn-outline-primary" onClick={() => handleFolderClick(folder)}>Open Folder</button>
+                    <button className="btn btn-outline-primary" onClick={() => handleFolderClick(folder)}>
+                      Open Folder
+                    </button>
                     <button
                       className="btn btn-outline-danger mt-2"
                       onClick={() => handleDeleteFolder(folder.id)}
@@ -184,6 +209,12 @@ const FileManagementPage = () => {
                   <div className="card">
                     <div className="card-body">
                       <h5 className="card-title">{file.name}</h5>
+                      <button
+                        className="btn btn-outline-primary mt-2"
+                        onClick={() => handleDownloadFile(file)}
+                      >
+                        Download File
+                      </button>
                       <button
                         className="btn btn-outline-danger mt-2"
                         onClick={() => handleDeleteFile(file.id)}
