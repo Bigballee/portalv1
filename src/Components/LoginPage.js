@@ -47,7 +47,7 @@ const LoginPage = () => {
       // Updated API endpoint directly to the new live server URL
       console.log("Using new API endpoint for login");
 
-      const response = await axios.post("http://51.20.26.200/login", { email, password });
+      const response = await axios.post("https://mygolden.co.uk/login", { email, password });
 
       if (response.data.token) {
         localStorage.setItem("authToken", response.data.token);
