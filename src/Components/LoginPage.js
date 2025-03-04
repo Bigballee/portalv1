@@ -54,7 +54,7 @@ const LoginPage = () => {
         const decodedToken = jwtDecode(response.data.token);
         const userRole = decodedToken.role;
         console.log("Decoded Token:", decodedToken);
-
+        localStorage.setItem("userData", JSON.stringify(decodedToken));
         if (userRole === "admin") {
           navigate("/admin");
         } else if (userRole === "staff") {

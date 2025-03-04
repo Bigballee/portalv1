@@ -35,14 +35,14 @@ import StaffViewReportPage from "./StaffPages/staffviewreports";
  */
 const ProtectedRoute = ({ element, allowedRoles }) => {
   // Use a fallback object if state.auth is undefined
-  const auth = useSelector((state) => state.auth) || { isAuthenticated: false, userRole: "" };
-  const { isAuthenticated, userRole } = auth;
   
-  if (!isAuthenticated) {
+  const auth = JSON.parse(localStorage.getItem("userData") || {})
+  const { role } = auth;
+  if (!role) {
     return <Navigate to="/login" />;
   }
   
-  if (!allowedRoles.includes(userRole)) {
+  if (!allowedRoles.includes(role)) {
     return (
       <div style={{ padding: "2rem", textAlign: "center" }}>
         <h2>Access Denied</h2>
